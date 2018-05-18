@@ -32,7 +32,7 @@ void random_graph( struct graph* graph1){
 int main(int argc, char const *argv[])
 {
 	struct graph graph1;
-	graph1.no_elems = 20;
+	graph1.no_elems = 6;
 	graph1.ad_matrix = (int *)calloc(graph1.no_elems * graph1.no_elems, sizeof(int));
 
     srand(time(NULL));
@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
 
 	for(int i = 0; i < graph1.no_elems * graph1.no_elems; i++){
 		printf("%d ", graph1.ad_matrix[i]);
-		if(i % graph1.no_elems - (graph1.no_elems - 1) == 0){
+		if(i % graph1.no_elems - 5 == 0){
 			printf("\n");
 		}
 	}
