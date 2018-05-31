@@ -1,22 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "tools.c"
 
 #define INFINITY 9999
-
-struct graph{
-	int no_elems;
-    int no_edges;
-//matricea de adiacenta in loc de 1 va contine distanta drumului care va fi mai mare si diferita fata de 0
-	int *ad_matrix;
-};
-
-//converteste coordonatele unei matrici normale in coordonata corespunzatoare vectorului pe care il folosesc.
-int convert_mat_array( int coord_1, int coord_2, int max_size );
-
-//genereaza un graph in mod aleator.
-void random_graph( struct graph* graph );
-
 
 void dijkstra( struct graph graph, int start_node, int final_node )
 {
@@ -104,15 +91,52 @@ void dijkstra( struct graph graph, int start_node, int final_node )
 
 }
 
-void print_ad_mat( struct graph graph){
-    int iterator;
+void bellman_ford(struct graph* graph, int src){
+    int *dist = (int *) malloc( graph -> no_elems * sizeof(int) );
+ 	int iterator_1;
+ 	int iterator_2;
+ 	int weight_1;
+	int source_1;
+	int destination_1;
 
-    for( iterator = 0; iterator < graph.no_elems * graph.no_elems; iterator++){
-        printf("%d ", graph.ad_matrix[iterator]);
-        if(iterator % graph.no_elems == graph.no_elems - 1){
-            printf("\n");
+ 	create_edges(graph);
+
+    // Step 1: Initializeaza toate legaturile de la sursa la celelalte noduri ca
+    // INFINITE
+    for ( iterator_1 = 0; iterator_1 < graph -> no_elems; iterator_1++ ){
+        dist[iterator_1] = INFINITY;
+    }
+
+    dist[src] = 0;
+ 
+    // Step 2: Verifica toate lagaturile de no_edges - 1 ori. Un drum tipic 
+    // de la sursa catre oricare alt nod poate avea maxim no_nodes - 1
+    // legaturi
+
+    for ( iterator_1 = 1; iterator_1 <= graph -> no_elems-1; iterator_1++ ){
+        for ( iterator_2 = 0; iterator_2 < graph -> no_edges; iterator_2++ ){
+            source_1 = graph->edge[iterator_2].source;
+            destination_1 = graph->edge[iterator_2].destination;
+            weight_1 = graph->edge[iterator_2].weight;
+
+            if ( dist[source_1] != INFINITY && dist[source_1] + weight_1 < dist[destination_1] ){
+                dist[destination_1] = dist[source_1] + weight_1;
+            }
         }
     }
+ 
+    // Step 3: Verfica daca exista cicluri de cost negativ
+    //metoda de mai sus functioneaza doar in cazul in care graful nu are cicluri de cost negativ
+    for ( iterator_1 = 0; iterator_1 < graph -> no_edges; iterator_1++ ){
+        source_1 = graph->edge[iterator_1].source;
+        destination_1 = graph->edge[iterator_1].destination;
+        weight_1 = graph->edge[iterator_1].weight;
+
+        if ( dist[source_1] != INFINITY && dist[source_1] + weight_1 < dist[destination_1] )
+            printf("Graph contains negative weight cycle");
+    }
+ 
+    print_array(dist, graph -> no_elems);
 }
 
 int main(int argc, char const *argv[])
@@ -126,41 +150,14 @@ int main(int argc, char const *argv[])
 
     print_ad_mat(graph);
 
-    dijkstra(graph, 0, 4);
+    bellman_ford(&graph, 0);
+
+    printf("\n");
+
+    dijkstra(graph, 0, 1);
 
     printf("\n");
 	free(graph.ad_matrix);
 	system("pause");
 	return 0;
-}
-
-int convert_mat_array( int coord_1, int coord_2, int max_size ){
-    return coord_1 * max_size + coord_2;
-}
-
-void random_graph( struct graph* graph ){
-    int iterator_1;
-    int iterator_2;
-    int flag;
-
-    graph -> no_edges = 0;
-
-    //parcurge randurile si coloanele matricei de adiacenta
-    for( iterator_1 = 0; iterator_1 < graph -> no_elems; iterator_1++ ){
-        for( iterator_2 = 0; iterator_2 < graph -> no_elems; iterator_2++){
-            //verifica daca pozitia actuala este pe diagonala principala
-            if( iterator_1 == iterator_2) continue;
-            //flag: exista drum/nu exista drum
-            flag = rand() % 2;
-            //in cazul in care exista drum, iar acesta nu a fost alocat deiterator_2a si nu are sens invers (pt a nu forma cicluri)
-            //se da valoare
-            if( flag ){
-                graph -> no_edges++;
-
-                if(graph -> ad_matrix[convert_mat_array(iterator_2, iterator_1, graph -> no_elems)] == 0){
-                    graph -> ad_matrix[convert_mat_array(iterator_1, iterator_2, graph -> no_elems)] = rand() % 10 + 1;
-                }
-            } 
-        }
-    }
 }
