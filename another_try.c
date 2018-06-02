@@ -91,13 +91,15 @@ void dijkstra( struct graph graph, int start_node, int final_node )
 
 }
 
-void bellman_ford(struct graph* graph, int src){
+void bellman_ford(struct graph* graph, int src, int dest){
     int *dist = (int *) malloc( graph -> no_elems * sizeof(int) );
  	int iterator_1;
  	int iterator_2;
+ 	int iterator_3;
  	int weight_1;
 	int source_1;
 	int destination_1;
+	int path[100][100];
 
  	create_edges(graph);
 
@@ -107,13 +109,17 @@ void bellman_ford(struct graph* graph, int src){
         dist[iterator_1] = INFINITY;
     }
 
+    for ( iterator_1 = 0; iterator_1 < 100; iterator_1++ ){
+        path[iterator_1][0] = 0;
+    }
+
     dist[src] = 0;
  
     // Step 2: Verifica toate lagaturile de no_edges - 1 ori. Un drum tipic 
     // de la sursa catre oricare alt nod poate avea maxim no_nodes - 1
     // legaturi
 
-    for ( iterator_1 = 1; iterator_1 <= graph -> no_elems-1; iterator_1++ ){
+    for ( iterator_1 = 1; iterator_1 <= graph -> no_elems - 1; iterator_1++ ){
         for ( iterator_2 = 0; iterator_2 < graph -> no_edges; iterator_2++ ){
             source_1 = graph->edge[iterator_2].source;
             destination_1 = graph->edge[iterator_2].destination;
@@ -121,6 +127,12 @@ void bellman_ford(struct graph* graph, int src){
 
             if ( dist[source_1] != INFINITY && dist[source_1] + weight_1 < dist[destination_1] ){
                 dist[destination_1] = dist[source_1] + weight_1;
+
+                path[destination_1][0] = path[source_1][0] + 1;
+                for( iterator_3 = 1; iterator_3 < path[destination_1][0]; iterator_3++ ){
+                	path[destination_1][iterator_3] = path[source_1][iterator_3];
+                }
+                path[destination_1][ path[destination_1][0] ] = source_1;
             }
         }
     }
@@ -136,21 +148,28 @@ void bellman_ford(struct graph* graph, int src){
             printf("Graph contains negative weight cycle");
     }
  
-    print_array(dist, graph -> no_elems);
+    printf("\nDistanta fata de %d este %d\n", dest, dist[dest]);
+    printf("Path: %d ", dest);
+    for( iterator_1 = path[dest][0]; iterator_1 > 0; iterator_1-- ){
+    	printf("<- %d ", path[dest][iterator_1]);
+    }
+
+    printf("\n", dest);
+
 }
 
-int main(int argc, char const *argv[])
-{
+int main(){
 	struct graph graph;
-	graph.no_elems = 10;
-	graph.ad_matrix = (int *)calloc(graph.no_elems * graph.no_elems, sizeof(int));
 
-    srand(time(NULL));
+
+	srand((unsigned) time(NULL));
+
+
 	random_graph(&graph);
 
     print_ad_mat(graph);
 
-    bellman_ford(&graph, 0);
+    bellman_ford(&graph, 0, 1);
 
     printf("\n");
 

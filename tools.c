@@ -1,11 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
-void create_edges(struct graph * graph);
-void random_graph( struct graph* graph );
-int convert_mat_array( int coord_1, int coord_2, int max_size );
-void print_ad_mat( struct graph graph);
-void print_array(int arr[], int n);
+
 
 struct edge
 {
@@ -22,6 +19,14 @@ struct graph{
 
 	struct edge *edge;
 };
+
+
+void create_edges(struct graph * graph);
+void random_graph( struct graph* graph );
+int convert_mat_array( int coord_1, int coord_2, int max_size );
+void print_ad_mat( struct graph graph);
+void print_array(int arr[], int n);
+
 
 void create_edges(struct graph * graph){
 	int iterator;
@@ -44,8 +49,11 @@ void random_graph( struct graph* graph ){
     int iterator_1;
     int iterator_2;
     int flag;
-
+    
+    graph -> no_elems = rand() % 100 + 1;
     graph -> no_edges = 0;
+
+    graph -> ad_matrix = (int *)calloc(graph -> no_elems * graph -> no_elems, sizeof(int));
 
     //parcurge randurile si coloanele matricei de adiacenta
     for( iterator_1 = 0; iterator_1 < graph -> no_elems; iterator_1++ ){
@@ -82,9 +90,7 @@ void print_ad_mat( struct graph graph){
     }
 }
 
-void print_array(int arr[], int n)
-
-{
+/*void print_array(int arr[], int n){
 
     printf("Vertex   Distance from Source\n");
     int i;
@@ -92,4 +98,4 @@ void print_array(int arr[], int n)
 
         printf("%d \t\t %d\n", i, arr[i]);
 
-}
+}*/
