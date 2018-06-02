@@ -21,11 +21,6 @@ struct graph{
 };
 
 
-/*void create_edges(struct graph * graph);
-void random_graph( struct graph* graph );
-int convert_mat_array( int coord_1, int coord_2, int max_size );
-void print_ad_mat( struct graph graph);
-void print_array(int arr[], int n);*/
 
 int convert_mat_array( int coord_1, int coord_2, int max_size ){
     return coord_1 * max_size + coord_2;
@@ -53,7 +48,7 @@ void random_graph( struct graph* graph ){
     int iterator_2;
     int flag;
     
-    graph -> no_elems = rand() % 10 + 1;
+    graph -> no_elems = rand() % 500 + 2;
     graph -> no_edges = 0;
 
     graph -> ad_matrix = (int *)calloc(graph -> no_elems * graph -> no_elems, sizeof(int));
@@ -80,22 +75,26 @@ void random_graph( struct graph* graph ){
 
 
 void print_ad_mat( struct graph graph){
+	FILE *f_write;
     int iterator;
 
+    f_write = fopen("graph.txt", "w");
+    fprintf(f_write, "Number of vertices: %d\nAdjacency matrix with cost on each edge: \n", graph.no_elems);
     for( iterator = 0; iterator < graph.no_elems * graph.no_elems; iterator++){
-        printf("%d ", graph.ad_matrix[iterator]);
+        fprintf(f_write, "%d ", graph.ad_matrix[iterator]);
         if(iterator % graph.no_elems == graph.no_elems - 1){
-            printf("\n");
+            fprintf(f_write, "\n");
         }
     }
+
+    fclose(f_write);
 }
 
-/*void print_array(int arr[], int n){
+void read_input( int *var_1, int *var_2){
+	FILE *f_read;
 
-    printf("Vertex   Distance from Source\n");
-    int i;
-    for (i = 0; i < n; ++i)
+	f_read = fopen("input.txt", "r");
+	fscanf(f_read, "%d%d", var_1, var_2);
 
-        printf("%d \t\t %d\n", i, arr[i]);
-
-}*/
+	fclose(f_read);
+}

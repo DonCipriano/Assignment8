@@ -1,17 +1,19 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
-#include "tools.h"
 
 #define INFINITY 9999
 
 void dijkstra( struct graph graph, int start_node, int final_node )
 {
- 
+
+    clock_t alg_time;
+    alg_time = clock();
+
     int *value_mat = (int*) malloc(graph.no_elems * graph.no_elems * sizeof(int));
     int *distance = (int*) malloc(graph.no_elems * sizeof(int));
     int *pred = (int*) malloc(graph.no_elems * sizeof(int));
-    int *visited = (int*) calloc(graph.no_elems, sizeof(int));;
+    int *visited = (int*) calloc(graph.no_elems, sizeof(int));
     int count;
     int minimum_distance;
     int next_node;
@@ -44,7 +46,7 @@ void dijkstra( struct graph graph, int start_node, int final_node )
     count = 1;
     
     while( count < graph.no_elems - 1 ){
-        minimum_distance=INFINITY;
+        minimum_distance = INFINITY;
         
         //next_node retine nodul cu distanta minima
         for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
@@ -57,10 +59,10 @@ void dijkstra( struct graph graph, int start_node, int final_node )
         //verifica daca exista o cale mai eficienta          
         visited[next_node] = 1;
         for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
-            if(!visited[iterator_1]){
-                if(minimum_distance + value_mat[convert_mat_array(next_node, iterator_1, graph.no_elems)]<distance[iterator_1]){
-                    distance[iterator_1]=minimum_distance+value_mat[convert_mat_array(next_node, iterator_1, graph.no_elems)];
-                    pred[iterator_1]=next_node;
+            if( !visited[iterator_1] ){
+                if( minimum_distance + value_mat[convert_mat_array(next_node, iterator_1, graph.no_elems)] < distance[iterator_1] ){
+                    distance[iterator_1] = minimum_distance + value_mat[convert_mat_array(next_node, iterator_1, graph.no_elems)];
+                    pred[iterator_1] = next_node;
                 }
             }
         }
@@ -71,8 +73,8 @@ void dijkstra( struct graph graph, int start_node, int final_node )
 //printeaza distanta si calea pentru nodul dorit
     if( final_node != start_node ){
         if( distance[final_node] < 9999 ){
-            printf("\nDistance dintre nodurile %d si %d = %d ", start_node, final_node, distance[final_node]);
-            printf("\nPath: %d ",final_node);
+            printf("\nDistance betwen %d and %d : %d", start_node, final_node, distance[final_node]);
+            printf("\nPath: %d ", final_node);
         
             iterator_1 = final_node;
 
@@ -82,27 +84,40 @@ void dijkstra( struct graph graph, int start_node, int final_node )
                 } while( iterator_1 != start_node );
             
         } else {
-            printf("\nNu exista legatura intre cele doua noduri.");
+            printf("\nNo valid path betwen the two vertices.");
         }
 
     } else {
-        printf("\nDistance = 0");
+        printf("\nDistance betwen %d and %d : %d", start_node, final_node, distance[final_node]);
+        printf("\nPath: %d", start_node);
     }
 
+    alg_time = clock() - alg_time;
+    double time_taken = ((double) alg_time) / CLOCKS_PER_SEC;
+
+    printf("\nExecution time of the function: %lf\n", time_taken);
+
+    free(value_mat);
+    free(distance);
+    free(pred);
+    free(visited);
 }
 
-void bellman_ford(struct graph graph, int src, int dest){
-    int *dist = (int *) malloc( graph.no_elems * sizeof(int) );
+void bellman_ford( struct graph graph, int src, int dest ){
+    clock_t alg_time;
+    alg_time = clock();
+
+    int *dist = (int*) malloc(graph.no_elems * sizeof(int));
     int iterator_1;
     int iterator_2;
     int iterator_3;
     int weight_1;
     int source_1;
     int destination_1;
-    int **path = (int **) malloc( graph.no_elems * sizeof(int *) );;
+    int **path = (int**) malloc(graph.no_elems * sizeof(int*));;
 
     for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
-        path[iterator_1] = (int *) malloc( graph.no_elems * sizeof(int) );
+        path[iterator_1] = (int*) malloc(graph.no_elems * sizeof(int));
     }
 
     create_edges(&graph);
@@ -153,37 +168,24 @@ void bellman_ford(struct graph graph, int src, int dest){
     }
  
     if( dist[dest] == INFINITY){
-        printf("Nu exista cale intre cele doua noduri.");
+        printf("No valid path betwen the two vertices.");
     } else {
-        printf("\nDistanta fata de %d este %d\n", dest, dist[dest]);
+        printf("\nDistance betwen %d and %d : %d\n", src, dest, dist[dest]);
         printf("Path: %d ", dest);
         for( iterator_1 = path[dest][0]; iterator_1 > 0; iterator_1-- ){
             printf("<- %d ", path[dest][iterator_1]);
         }
     }
-    printf("\n", dest);
 
-}
+    alg_time = clock() - alg_time;
+    double time_taken = ((double) alg_time) / CLOCKS_PER_SEC;
 
-int main(){
-    struct graph graph;
+    printf("\nExecution time of the function: %lf\n", time_taken);
 
-
-    srand((unsigned) time(NULL));
-
-
-    random_graph(&graph);
-
-    print_ad_mat(graph);
-
-    bellman_ford(graph, 0, 1);
-
-    printf("\n");
-
-    dijkstra(graph, 0, 1);
-
-    printf("\n");
-    free(graph.ad_matrix);
-    system("pause");
-    return 0;
+    free(dist);
+    for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
+        free(path[iterator_1]);
+    }
+    free(path);
+    free(graph.edge);
 }
