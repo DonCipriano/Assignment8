@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "tools.c"
+#include "tools.h"
 
 #define INFINITY 9999
 
@@ -91,25 +91,29 @@ void dijkstra( struct graph graph, int start_node, int final_node )
 
 }
 
-void bellman_ford(struct graph* graph, int src, int dest){
-    int *dist = (int *) malloc( graph -> no_elems * sizeof(int) );
- 	int iterator_1;
- 	int iterator_2;
- 	int iterator_3;
- 	int weight_1;
-	int source_1;
-	int destination_1;
-	int path[100][100];
+void bellman_ford(struct graph graph, int src, int dest){
+    int *dist = (int *) malloc( graph.no_elems * sizeof(int) );
+    int iterator_1;
+    int iterator_2;
+    int iterator_3;
+    int weight_1;
+    int source_1;
+    int destination_1;
+    int **path = (int **) malloc( graph.no_elems * sizeof(int *) );;
 
- 	create_edges(graph);
+    for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
+        path[iterator_1] = (int *) malloc( graph.no_elems * sizeof(int) );
+    }
+
+    create_edges(&graph);
 
     // Step 1: Initializeaza toate legaturile de la sursa la celelalte noduri ca
     // INFINITE
-    for ( iterator_1 = 0; iterator_1 < graph -> no_elems; iterator_1++ ){
+    for ( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
         dist[iterator_1] = INFINITY;
     }
 
-    for ( iterator_1 = 0; iterator_1 < 100; iterator_1++ ){
+    for ( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
         path[iterator_1][0] = 0;
     }
 
@@ -119,18 +123,18 @@ void bellman_ford(struct graph* graph, int src, int dest){
     // de la sursa catre oricare alt nod poate avea maxim no_nodes - 1
     // legaturi
 
-    for ( iterator_1 = 1; iterator_1 <= graph -> no_elems - 1; iterator_1++ ){
-        for ( iterator_2 = 0; iterator_2 < graph -> no_edges; iterator_2++ ){
-            source_1 = graph->edge[iterator_2].source;
-            destination_1 = graph->edge[iterator_2].destination;
-            weight_1 = graph->edge[iterator_2].weight;
+    for ( iterator_1 = 1; iterator_1 <= graph.no_elems - 1; iterator_1++ ){
+        for ( iterator_2 = 0; iterator_2 < graph.no_edges; iterator_2++ ){
+            source_1 = graph.edge[iterator_2].source;
+            destination_1 = graph.edge[iterator_2].destination;
+            weight_1 = graph.edge[iterator_2].weight;
 
             if ( dist[source_1] != INFINITY && dist[source_1] + weight_1 < dist[destination_1] ){
                 dist[destination_1] = dist[source_1] + weight_1;
 
                 path[destination_1][0] = path[source_1][0] + 1;
                 for( iterator_3 = 1; iterator_3 < path[destination_1][0]; iterator_3++ ){
-                	path[destination_1][iterator_3] = path[source_1][iterator_3];
+                    path[destination_1][iterator_3] = path[source_1][iterator_3];
                 }
                 path[destination_1][ path[destination_1][0] ] = source_1;
             }
@@ -139,44 +143,47 @@ void bellman_ford(struct graph* graph, int src, int dest){
  
     // Step 3: Verfica daca exista cicluri de cost negativ
     //metoda de mai sus functioneaza doar in cazul in care graful nu are cicluri de cost negativ
-    for ( iterator_1 = 0; iterator_1 < graph -> no_edges; iterator_1++ ){
-        source_1 = graph->edge[iterator_1].source;
-        destination_1 = graph->edge[iterator_1].destination;
-        weight_1 = graph->edge[iterator_1].weight;
+    for ( iterator_1 = 0; iterator_1 < graph.no_edges; iterator_1++ ){
+        source_1 = graph.edge[iterator_1].source;
+        destination_1 = graph.edge[iterator_1].destination;
+        weight_1 = graph.edge[iterator_1].weight;
 
         if ( dist[source_1] != INFINITY && dist[source_1] + weight_1 < dist[destination_1] )
             printf("Graph contains negative weight cycle");
     }
  
-    printf("\nDistanta fata de %d este %d\n", dest, dist[dest]);
-    printf("Path: %d ", dest);
-    for( iterator_1 = path[dest][0]; iterator_1 > 0; iterator_1-- ){
-    	printf("<- %d ", path[dest][iterator_1]);
+    if( dist[dest] == INFINITY){
+        printf("Nu exista cale intre cele doua noduri.");
+    } else {
+        printf("\nDistanta fata de %d este %d\n", dest, dist[dest]);
+        printf("Path: %d ", dest);
+        for( iterator_1 = path[dest][0]; iterator_1 > 0; iterator_1-- ){
+            printf("<- %d ", path[dest][iterator_1]);
+        }
     }
-
     printf("\n", dest);
 
 }
 
 int main(){
-	struct graph graph;
+    struct graph graph;
 
 
-	srand((unsigned) time(NULL));
+    srand((unsigned) time(NULL));
 
 
-	random_graph(&graph);
+    random_graph(&graph);
 
     print_ad_mat(graph);
 
-    bellman_ford(&graph, 0, 1);
+    bellman_ford(graph, 0, 1);
 
     printf("\n");
 
     dijkstra(graph, 0, 1);
 
     printf("\n");
-	free(graph.ad_matrix);
-	system("pause");
-	return 0;
+    free(graph.ad_matrix);
+    system("pause");
+    return 0;
 }

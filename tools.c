@@ -21,12 +21,15 @@ struct graph{
 };
 
 
-void create_edges(struct graph * graph);
+/*void create_edges(struct graph * graph);
 void random_graph( struct graph* graph );
 int convert_mat_array( int coord_1, int coord_2, int max_size );
 void print_ad_mat( struct graph graph);
-void print_array(int arr[], int n);
+void print_array(int arr[], int n);*/
 
+int convert_mat_array( int coord_1, int coord_2, int max_size ){
+    return coord_1 * max_size + coord_2;
+}
 
 void create_edges(struct graph * graph){
 	int iterator;
@@ -50,7 +53,7 @@ void random_graph( struct graph* graph ){
     int iterator_2;
     int flag;
     
-    graph -> no_elems = rand() % 100 + 1;
+    graph -> no_elems = rand() % 10 + 1;
     graph -> no_edges = 0;
 
     graph -> ad_matrix = (int *)calloc(graph -> no_elems * graph -> no_elems, sizeof(int));
@@ -75,9 +78,6 @@ void random_graph( struct graph* graph ){
     }
 }
 
-int convert_mat_array( int coord_1, int coord_2, int max_size ){
-    return coord_1 * max_size + coord_2;
-}
 
 void print_ad_mat( struct graph graph){
     int iterator;
