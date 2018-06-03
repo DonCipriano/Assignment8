@@ -1,0 +1,19 @@
+CC=gcc
+CFLAGS=-c -Wall
+
+all: app
+
+app: main.o algorithms.o tools.o
+	$(CC) main.o algorithms.o tools.o -o app
+
+main.o: main.c
+	$(CC) $(CFLAGS) main.c
+
+algorithms.o: algorithms.c
+	$(CC) $(CFLAGS) algorithms.c
+
+tools.o: tools.c
+	$(CC) $(CFLAGS) tools.c
+
+clean:
+	rm -f *.o

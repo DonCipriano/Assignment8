@@ -1,0 +1,16 @@
+all: app 
+
+app: main.o algorithms.o tools.o
+	gcc main.o algorithms.o tools.o -o app
+
+main.o: main.c
+	gcc -c main.c
+
+algorithms.o: algorithms.c
+	gcc -c algorithms.c
+
+tools.o: tools.c
+	gcc -c tools.c
+	
+clean:
+	rm *o app

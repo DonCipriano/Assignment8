@@ -1,0 +1,77 @@
+\hypertarget{tools_8h}{}\section{C\+:/\+Users/\+Ciprian/\+Documents/\+Assigment8/\+Assignment8/tools.h File Reference}
+\label{tools_8h}\index{C\+:/\+Users/\+Ciprian/\+Documents/\+Assigment8/\+Assignment8/tools.\+h@{C\+:/\+Users/\+Ciprian/\+Documents/\+Assigment8/\+Assignment8/tools.\+h}}
+
+
+C library implementation for some functions used in algorithms or used for input/output.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structedge}{edge}}
+\begin{DoxyCompactList}\small\item\em Structure used to store the elements of an edge. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structgraph}{graph}}
+\begin{DoxyCompactList}\small\item\em Structure used to store the elements of a graph. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{tools_8h_a956e2723d559858d08644ac99146e910}\label{tools_8h_a956e2723d559858d08644ac99146e910}} 
+\#define {\bfseries I\+N\+F\+I\+N\+I\+TY}~9999
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{tools_8h_a27350242f00f108ecbf8e125d1e0c6e8}{convert\+\_\+mat\+\_\+array}} (int coord\+\_\+1, int coord\+\_\+2, int max\+\_\+size)
+\item 
+\mbox{\Hypertarget{tools_8h_a8b35876db32af3888511926fd9cca1fc}\label{tools_8h_a8b35876db32af3888511926fd9cca1fc}} 
+void {\bfseries create\+\_\+edges} (struct \mbox{\hyperlink{structgraph}{graph}} $\ast$\mbox{\hyperlink{structgraph}{graph}})
+\item 
+\mbox{\Hypertarget{tools_8h_ae1d13d0f50e5c36ecfb3fc281e2caaaf}\label{tools_8h_ae1d13d0f50e5c36ecfb3fc281e2caaaf}} 
+void {\bfseries random\+\_\+graph} (struct \mbox{\hyperlink{structgraph}{graph}} $\ast$\mbox{\hyperlink{structgraph}{graph}})
+\item 
+\mbox{\Hypertarget{tools_8h_ab86fb0ae7ba06a372486abecbf2ee0cc}\label{tools_8h_ab86fb0ae7ba06a372486abecbf2ee0cc}} 
+void {\bfseries print\+\_\+ad\+\_\+mat} (struct \mbox{\hyperlink{structgraph}{graph}} \mbox{\hyperlink{structgraph}{graph}})
+\item 
+\mbox{\Hypertarget{tools_8h_ac5699e508f046ba5d7eeee3bb8859241}\label{tools_8h_ac5699e508f046ba5d7eeee3bb8859241}} 
+void {\bfseries read\+\_\+input} (int $\ast$var\+\_\+1, int $\ast$var\+\_\+2)
+\item 
+\mbox{\Hypertarget{tools_8h_a58820bb7c8a8e50aa5eb73cbe967aa3d}\label{tools_8h_a58820bb7c8a8e50aa5eb73cbe967aa3d}} 
+void {\bfseries init\+\_\+dijkstra} (struct \mbox{\hyperlink{structgraph}{graph}} \mbox{\hyperlink{structgraph}{graph}}, int $\ast$value\+\_\+mat, int $\ast$distance, int $\ast$pred, int start\+\_\+node)
+\item 
+\mbox{\Hypertarget{tools_8h_a31ebb8cd43d5797275c301e8a8e0b5b6}\label{tools_8h_a31ebb8cd43d5797275c301e8a8e0b5b6}} 
+void {\bfseries print\+\_\+results\+\_\+dijkstra} (int start\+\_\+node, int final\+\_\+node, int $\ast$distance, int $\ast$pred)
+\item 
+\mbox{\Hypertarget{tools_8h_a001f3182864f6ff70f7d6eb4321312c1}\label{tools_8h_a001f3182864f6ff70f7d6eb4321312c1}} 
+void {\bfseries init\+\_\+bellman\+\_\+ford} (int $\ast$dist, int $\ast$$\ast$path, int no\+\_\+elems)
+\item 
+\mbox{\Hypertarget{tools_8h_a4e1f697b9c377ad521eac403cf21db3b}\label{tools_8h_a4e1f697b9c377ad521eac403cf21db3b}} 
+int {\bfseries negative\+\_\+cycle\+\_\+check} (struct \mbox{\hyperlink{structgraph}{graph}} \mbox{\hyperlink{structgraph}{graph}}, int $\ast$dist)
+\item 
+\mbox{\Hypertarget{tools_8h_a47e6c4e39c8f2a5346821e0a08d20cd4}\label{tools_8h_a47e6c4e39c8f2a5346821e0a08d20cd4}} 
+void {\bfseries print\+\_\+results\+\_\+bellman\+\_\+ford} (int src, int dest, int $\ast$dist, int $\ast$$\ast$path)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+C library implementation for some functions used in algorithms or used for input/output. 
+
+Created by Amzuloiu Andrei-\/\+Ciprian on 03/06/18. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{tools_8h_a27350242f00f108ecbf8e125d1e0c6e8}\label{tools_8h_a27350242f00f108ecbf8e125d1e0c6e8}} 
+\index{tools.\+h@{tools.\+h}!convert\+\_\+mat\+\_\+array@{convert\+\_\+mat\+\_\+array}}
+\index{convert\+\_\+mat\+\_\+array@{convert\+\_\+mat\+\_\+array}!tools.\+h@{tools.\+h}}
+\subsubsection{\texorpdfstring{convert\+\_\+mat\+\_\+array()}{convert\_mat\_array()}}
+{\footnotesize\ttfamily int convert\+\_\+mat\+\_\+array (\begin{DoxyParamCaption}\item[{int}]{coord\+\_\+1,  }\item[{int}]{coord\+\_\+2,  }\item[{int}]{max\+\_\+size }\end{DoxyParamCaption})}
+
+This function converts the coordinates of a matrix in array position. 
+\begin{DoxyParams}{Parameters}
+{\em coord\+\_\+1} & The column coordinate of a matrix. \\
+\hline
+{\em coord\+\_\+2} & The row coordinate of a matrix. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 34 of file tools.\+c.
+

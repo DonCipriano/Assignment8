@@ -1,11 +1,31 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+///\file algorithms.c
+///\brief C file implementation for Dijkstra algorithm and Bellman Ford algorithm.
+///
+/// Created by Amzuloiu Andrei-Ciprian on 03/06/18.
+///
+/// Implements Dijkstra algorithm and Bellman Ford algorithm used to find the minimum path between two vertexes in a weighted directed graph.
 
-#define INFINITY 9999
+#include <stdlib.h>///>malloc(), calloc(), free()
+#include <stdio.h>///>printf()
+#include <time.h>///>clock()
+#include "tools.h"///>init_dijkstra(), print_results_dijkstra(), create_edges(), init_bellman_ford(), negative_cycle_check(), print_results_bellman_ford()
 
-void dijkstra( struct graph graph, int start_node, int final_node )
-{
+void dijkstra( struct graph graph, int start_node, int final_node ){
+    ///\fn void dijkstra()
+        ///\brief Find the minimum path between two vertexes and print them in console screen.
+        ///\param graph A structure variable that contains the details about the graph that will be used.
+        ///\param start_node The source vertex.
+        ///\param final_node The destination vertex.
+        ///\var alg_time A variable used to find the execution time of the function.
+        ///\var *value_mat A copy of *ad_matrix modified for dijkstra algorithm.
+        ///\var *distance An array used to store the distance between source vertex and any other vertex in graph.
+        ///\var *pred An array used to store the predecessor of each node.
+        ///\var *visited An array used to check if a node was visited or not.
+        ///\var count Gives the number of nodes seen so far.
+        ///\var minimum_distance Gives the shortest distance found so far.
+        ///\var next_node Gives the node at minimum distance.
+        ///\var iterator_1 Just a variable used for iteration.
+        ///\var iterator_1 Just a variable used for iteration.
 
     clock_t alg_time;
     alg_time = clock();
@@ -20,26 +40,7 @@ void dijkstra( struct graph graph, int start_node, int final_node )
     int iterator_1;
     int iterator_2;
     
-    //pred stocheaza predecesorul fiecarui nod
-    //count memoreaza numarul de noduri vizitate 
-    
-
-    //prelucram matricea de cost
-    for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
-        for( iterator_2 = 0; iterator_2 < graph.no_elems; iterator_2++ ){
-            if( graph.ad_matrix[convert_mat_array(iterator_1, iterator_2, graph.no_elems)] == 0 ){
-                value_mat[convert_mat_array(iterator_1, iterator_2, graph.no_elems)] = INFINITY;
-            } else {
-                value_mat[convert_mat_array(iterator_1, iterator_2, graph.no_elems)] = graph.ad_matrix[convert_mat_array(iterator_1, iterator_2, graph.no_elems)];
-            }
-        }
-    }
-    
-    //initializeaza pred, distance si visited
-    for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
-        distance[iterator_1] = value_mat[convert_mat_array(start_node, iterator_1, graph.no_elems)];
-        pred[iterator_1] = start_node;
-    }
+    init_dijkstra(graph, value_mat, distance, pred, start_node);
     
     distance[start_node] = 0;
     visited[start_node] = 1;
@@ -48,15 +49,13 @@ void dijkstra( struct graph graph, int start_node, int final_node )
     while( count < graph.no_elems - 1 ){
         minimum_distance = INFINITY;
         
-        //next_node retine nodul cu distanta minima
         for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
             if( distance[iterator_1] < minimum_distance && !visited[iterator_1] ){
                 minimum_distance = distance[iterator_1];
                 next_node = iterator_1;
             }
         }
-            
-        //verifica daca exista o cale mai eficienta          
+                    
         visited[next_node] = 1;
         for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
             if( !visited[iterator_1] ){
@@ -70,27 +69,7 @@ void dijkstra( struct graph graph, int start_node, int final_node )
         count++;
     }
 
-//printeaza distanta si calea pentru nodul dorit
-    if( final_node != start_node ){
-        if( distance[final_node] < 9999 ){
-            printf("\nDistance betwen %d and %d : %d", start_node, final_node, distance[final_node]);
-            printf("\nPath: %d ", final_node);
-        
-            iterator_1 = final_node;
-
-            do{
-               iterator_1 = pred[iterator_1];
-               printf("<- %d ", iterator_1);
-                } while( iterator_1 != start_node );
-            
-        } else {
-            printf("\nNo valid path betwen the two vertices.");
-        }
-
-    } else {
-        printf("\nDistance betwen %d and %d : %d", start_node, final_node, distance[final_node]);
-        printf("\nPath: %d", start_node);
-    }
+    print_results_dijkstra(start_node, final_node, distance, pred);
 
     alg_time = clock() - alg_time;
     double time_taken = ((double) alg_time) / CLOCKS_PER_SEC;
@@ -103,7 +82,19 @@ void dijkstra( struct graph graph, int start_node, int final_node )
     free(visited);
 }
 
-void bellman_ford( struct graph graph, int src, int dest ){
+void bellman_ford( struct graph graph, int start_node, int final_node ){
+    ///\fn void bellman_for( struct graph graph, int start_node, int final_node )
+        ///\brief Find the minimum path between two vertexes and print them in console screen.
+        ///\param graph A structure variable that contains the details about the graph that will be used.
+        ///\param start_node The source vertex.
+        ///\param final_node The destination vertex.
+        ///\var alg_time A variable used to find the execution time of the function.
+        ///\var *dist An array used to store the distance between source vertex and any other vertex in graph.
+        ///\var **path A matrix used to store the path between the source vartex and all others vertexes.
+        ///\var weight A variable used to store the weight of an edge.
+        ///\var source A variable used to store the source vertex of an edge.
+        ///\var destination A variable used to store the destination vertex of an edge.
+
     clock_t alg_time;
     alg_time = clock();
 
@@ -111,9 +102,9 @@ void bellman_ford( struct graph graph, int src, int dest ){
     int iterator_1;
     int iterator_2;
     int iterator_3;
-    int weight_1;
-    int source_1;
-    int destination_1;
+    int weight;
+    int source;
+    int destination;
     int **path = (int**) malloc(graph.no_elems * sizeof(int*));;
 
     for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
@@ -122,59 +113,29 @@ void bellman_ford( struct graph graph, int src, int dest ){
 
     create_edges(&graph);
 
-    // Step 1: Initializeaza toate legaturile de la sursa la celelalte noduri ca
-    // INFINITE
-    for ( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
-        dist[iterator_1] = INFINITY;
-    }
-
-    for ( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
-        path[iterator_1][0] = 0;
-    }
-
-    dist[src] = 0;
- 
-    // Step 2: Verifica toate lagaturile de no_edges - 1 ori. Un drum tipic 
-    // de la sursa catre oricare alt nod poate avea maxim no_nodes - 1
-    // legaturi
+    init_bellman_ford( dist, path, graph.no_elems );
+    dist[start_node] = 0;
 
     for ( iterator_1 = 1; iterator_1 <= graph.no_elems - 1; iterator_1++ ){
         for ( iterator_2 = 0; iterator_2 < graph.no_edges; iterator_2++ ){
-            source_1 = graph.edge[iterator_2].source;
-            destination_1 = graph.edge[iterator_2].destination;
-            weight_1 = graph.edge[iterator_2].weight;
+            source = graph.edge[iterator_2].source;
+            destination = graph.edge[iterator_2].destination;
+            weight = graph.edge[iterator_2].weight;
 
-            if ( dist[source_1] != INFINITY && dist[source_1] + weight_1 < dist[destination_1] ){
-                dist[destination_1] = dist[source_1] + weight_1;
+            if ( dist[source] != INFINITY && dist[source] + weight < dist[destination] ){
+                dist[destination] = dist[source] + weight;
 
-                path[destination_1][0] = path[source_1][0] + 1;
-                for( iterator_3 = 1; iterator_3 < path[destination_1][0]; iterator_3++ ){
-                    path[destination_1][iterator_3] = path[source_1][iterator_3];
+                path[destination][0] = path[source][0] + 1;
+                for( iterator_3 = 1; iterator_3 < path[destination][0]; iterator_3++ ){
+                    path[destination][iterator_3] = path[source][iterator_3];
                 }
-                path[destination_1][ path[destination_1][0] ] = source_1;
+                path[destination][ path[destination][0] ] = source;
             }
         }
     }
  
-    // Step 3: Verfica daca exista cicluri de cost negativ
-    //metoda de mai sus functioneaza doar in cazul in care graful nu are cicluri de cost negativ
-    for ( iterator_1 = 0; iterator_1 < graph.no_edges; iterator_1++ ){
-        source_1 = graph.edge[iterator_1].source;
-        destination_1 = graph.edge[iterator_1].destination;
-        weight_1 = graph.edge[iterator_1].weight;
-
-        if ( dist[source_1] != INFINITY && dist[source_1] + weight_1 < dist[destination_1] )
-            printf("Graph contains negative weight cycle");
-    }
- 
-    if( dist[dest] == INFINITY){
-        printf("No valid path betwen the two vertices.");
-    } else {
-        printf("\nDistance betwen %d and %d : %d\n", src, dest, dist[dest]);
-        printf("Path: %d ", dest);
-        for( iterator_1 = path[dest][0]; iterator_1 > 0; iterator_1-- ){
-            printf("<- %d ", path[dest][iterator_1]);
-        }
+    if( !negative_cycle_check(graph, dist) ){
+        print_results_bellman_ford(start_node, final_node, dist, path);
     }
 
     alg_time = clock() - alg_time;
