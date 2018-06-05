@@ -105,7 +105,7 @@ void bellman_ford( struct graph graph, int start_node, int final_node ){
     int weight;
     int source;
     int destination;
-    int **path = (int**) malloc(graph.no_elems * sizeof(int*));;
+    int **path = (int**) malloc(graph.no_elems * sizeof(int*));
 
     for( iterator_1 = 0; iterator_1 < graph.no_elems; iterator_1++ ){
         path[iterator_1] = (int*) malloc(graph.no_elems * sizeof(int));

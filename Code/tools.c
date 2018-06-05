@@ -12,8 +12,7 @@
 #define INFINITY 9999
 
 ///\brief Structure used to store the elements of an edge.
-struct edge
-{
+struct edge{
     int source;
     int destination;
     int weight;
@@ -21,7 +20,6 @@ struct edge
 
 ///\brief Structure used to store the elements of a graph.
 struct graph{
-	
 	int no_elems;
     int no_edges;
 	int* ad_matrix;
@@ -33,16 +31,16 @@ struct graph{
 
 int convert_mat_array( int coord_1, int coord_2, int max_size ){
 	///\fn int convert_mat_array()
-    ///\brief This function converts the coordinates of a matrix in array position.
-    ///\param coord_1 The column coordinate of a matrix.
-    ///\param coord_2 The row coordinate of a matrix.
+   		///\brief This function converts the coordinates of a matrix in array position.
+   		///\param coord_1 The column coordinate of a matrix.
+    	///\param coord_2 The row coordinate of a matrix.
 
 	/// It returns the converted array position. 
 	/// This is usefull because I used an array for ad_matrix and for other variables in dijkstra algorithm.
     return coord_1 * max_size + coord_2;
 }
 
-void create_edges(struct graph* graph){
+void create_edges( struct graph* graph ){
 	///\fn void create_edges()
 		///\brief This function use the ad_matrix to create an array with all edges of the graph.
 		///\param *graph The graph that we use in our algorithms.
@@ -184,7 +182,7 @@ void print_results_dijkstra( int start_node, int final_node, int* distance, int*
 	int iterator;
 
 	if( final_node != start_node ){
-        if( distance[final_node] < 9999 ){
+        if( distance[final_node] < INFINITY ){
             printf("\nDistance between %d and %d : %d", start_node, final_node, distance[final_node]);
             printf("\nPath: %d ", final_node);
         
